@@ -102,4 +102,18 @@ app.post("/withdraw", verifyIfExistsAccountCPF, (request, response) => {
     return response.status(201).send();
 });
 
+app.get("/statement/date", verifyIfExistsAccountCPF, (request, response) => { 
+    const { customer} = request;   
+    const {date} = request.query;
+
+    //O valor "00:00" definido em Date é para que a hora seja sempre considerada "00:00" e não considere a hora que estiver gravada
+    const dateFormat = new Date(date + " 00:00");
+
+    const statement = customer.statement.filter((statement) => statement.created_at.toDateString() === 
+    new Date(dateFormat).toDateString()
+    );
+
+    return response.json(statement);
+});
+
 app.listen(3333);
